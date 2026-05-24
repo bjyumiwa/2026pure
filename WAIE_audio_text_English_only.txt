@@ -1,0 +1,81 @@
+WAIE presentation audio script
+
+Practice order: logical slide order. Note: in the uploaded PDF, the ART 5.0 slide appears early, but this script follows the slide-number order and places the Canva demo after Background.
+
+Slide 01 - Title
+Hello everyone. My name is ○○. Today, I will present my study, Process-Trace Analysis of Iterative Decision-Making in Generative AI-Supported Art Education. The main message is that non-selected images are learning traces. In this talk, I focus on the decisions that happen before the final image.
+
+Slide 02 - Research inspiration
+This research began with one unused image. In a generative AI activity, students often receive many images very quickly. I became interested not only in the image they finally chose, but also in the image they did not choose. So my first question was simple: why was this image not chosen?
+
+Slide 03 - Hidden criterion
+The student's short words were very important. The student said that the image felt heavy, too dark, and too busy. These words are small, but they reveal a hidden criterion. The student was looking for an image that was brighter, clearer, and closer to the intended expression.
+
+Slide 04 - Background
+Generative AI has changed the speed of idea sketches. Before AI, students usually made a small number of sketches slowly. With AI, they can produce many polished options very quickly. This creates a new classroom tempo, and it also changes how students compare and judge their ideas.
+
+Slide 05 - Canva demo
+Next, I will show a short video of the classroom workflow. Students open Canva for Education, generate several images, compare them, choose one, review it, and revise their prompt. Please notice that the important point is not only the final image, but the choices made along the way.
+
+Slide 06 - Problem
+A final image can hide the thinking process. When we look only at the final product, it may look polished and successful. However, we cannot easily see what the student rejected, what the student changed, or why the student made that decision.
+
+Slide 07 - Purpose
+Therefore, I examined the traces that remain before the final image. These traces include prompts, generated images, choices, short reasons, and revisions. I call them process traces. They help us see students' evaluative decisions during the creative process.
+
+Slide 08 - Core message
+Here is the core message again. Non-selected images are not failed images. They are learning traces. They show what students rejected, what they wanted to keep, and how their criteria began to develop.
+
+Slide 09 - Framework 1: ART 5.0
+The first framework is ART 5.0. I use ART 5.0 to position generative AI as one art tool in a long history of tools. Art has always changed with tools, such as brushes, cameras, digital tools, and now AI. In this view, AI is not a replacement for creativity. It is a new tool that changes the process of expression.
+
+Slide 10 - Framework 2: CSRI
+The second framework is C S R I. C S R I means Compare, Select, Review, and Iterate. Students compare several AI images, select one option, review the reason, and iterate by changing the prompt or direction. In this study, C S R I is used as a unit for segmenting the process.
+
+Slide 11 - Framework 3: CAPGAP
+The third framework is CAPGAP. CAPGAP helps interpret the mismatch behind students' decisions. A cognitive gap appears when meaning, form, or composition does not fit the student's intention. An affective gap appears when feelings, such as heavy, cute, or uncomfortable, guide the judgment. A participatory gap appears when tools, teachers, or peers influence the decision.
+
+Slide 12 - Framework recap
+In this study, C S R I and CAPGAP have different roles. C S R I tells us what happened in the process. CAPGAP helps us explain why the direction changed. In other words, C S R I is for segmentation, and CAPGAP is for interpretation.
+
+Slide 13 - Method: classroom
+The activity took place in a regular lower-secondary art class. Students used Canva for Education during a fifty-minute lesson. About thirty minutes were used for AI image generation and selection. The activity was part of normal classroom practice, not a special laboratory setting.
+
+Slide 14 - Method: data
+The data were naturally remaining classroom traces. They included prompts, generated images, choices, and brief reasons. These were not additional tests. They were records that appeared naturally while students worked with generative AI.
+
+Slide 15 - Analysis
+The analysis had two steps. First, I segmented the activity using C S R I. This step showed where comparison, selection, review, and iteration appeared. Second, I interpreted the review words and changes using CAPGAP. This step helped explain the meaning of the mismatch.
+
+Slide 16 - Results guide
+Before showing the result, I will explain how to read the graph. The horizontal axis shows whether a student wrote a review note. The vertical axis shows whether iteration was visible. The four colors show four patterns: neither, review only, iterate only, and both.
+
+Slide 17 - Results 1
+The total number of students was seventy-one. Thirteen students had neither review notes nor visible iteration. Three students had review notes only. Thirty-seven students had iteration only. Eighteen students had both review notes and iteration. Overall, fifty-five students iterated, while only twenty-one students wrote review notes.
+
+Slide 18 - Results 1: interpretation
+This result shows an important point. Revision was visible, but reasoning was uneven. Many students changed their prompt or direction, even when they did not write a clear review note. This means that the process trace can show decision-making that is not fully expressed in words.
+
+Slide 19 - Case 1: non-selected image
+Now I will show one case. The non-selected image helped reveal what felt wrong to the student. The student described it as heavy, too dark, and too busy. These words suggest that the image did not match the student's intended atmosphere.
+
+Slide 20 - Case 1: selected image
+The selected image revealed the emerging criteria. The student moved toward an image that was brighter, clearer, and closer to the intention. By comparing the selected and non-selected images, we can see how the student's evaluative criteria became more visible.
+
+Slide 21 - Case 2
+In another case, the direction changed through both AI and other people. AI outputs provided several possible directions. At the same time, peers and the teacher influenced how the student interpreted those options. This shows that decision-making was not only individual, but also participatory.
+
+Slide 22 - Revisit
+Now we can return to the framework. ART 5.0 positions generative AI as an art tool. C S R I describes the structure of the process. CAPGAP explains the meaning of the mismatch. Together, these frameworks help us understand how evaluative decisions changed during AI-supported art making.
+
+Slide 23 - Conclusion
+In conclusion, final products are important, but they are not enough. Final products show what was made. Process traces show how it was chosen. By examining both selected and non-selected images, we can better understand students' learning and decision-making.
+
+Slide 24 - Future work
+As future work, I would like to make this process assessment more usable for teachers. It should work across tools and across schools. I also want to develop lightweight rubrics based on C S R I and CAPGAP, so that teachers can observe learning without adding too much burden.
+
+Slide 25 - References
+Here are the selected references for this study. They include my prior work on ART 5.0 and CAPGAP, the current process-trace study, the Canva for Education classroom context, and related work on AI, co-creation, and process assessment. I will be happy to share more details during the discussion.
+
+Slide 26 - Thank you
+Thank you very much for listening. Again, the key message is this: non-selected images are learning traces. I hope this study helps us see not only what students make, but also how they think, choose, and revise during creative learning. Thank you.
