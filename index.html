@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WAIE 2026 Practice App - Speaker Notes</title>
+  <style>
+    :root { --bg:#fff9f4; --card:#ffffff; --ink:#24283b; --muted:#657085; --accent:#f78ab7; --accent2:#ffe9a8; --line:#f3bfd3; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:linear-gradient(180deg,#fffaf7,#f7fbff); color:var(--ink); }
+    header { position:sticky; top:0; z-index:10; background:rgba(255,255,255,.94); backdrop-filter:blur(8px); border-bottom:1px solid #eee; padding:10px 14px; }
+    .top { display:flex; align-items:center; gap:10px; flex-wrap:wrap; max-width:1200px; margin:auto; }
+    h1 { font-size:18px; margin:0; flex:1; min-width:240px; }
+    .pill { border:1px solid var(--line); background:#fff; border-radius:999px; padding:7px 12px; font-weight:700; }
+    main { max-width:1200px; margin:0 auto; padding:14px; display:grid; grid-template-columns:minmax(320px,1.1fr) minmax(320px,.9fr); gap:16px; }
+    @media (max-width:880px) { main { grid-template-columns:1fr; padding:10px; } }
+    .card { background:rgba(255,255,255,.94); border:1px solid #f0d9e3; border-radius:22px; box-shadow:0 10px 30px rgba(90,60,90,.08); overflow:hidden; }
+    .slidebox { padding:12px; }
+    .slide-img { width:100%; height:auto; border-radius:16px; display:block; background:#eee; }
+    .scriptbox { padding:16px; }
+    .slide-title { font-size:22px; margin:0 0 8px; line-height:1.28; }
+    .meta { color:var(--muted); font-size:14px; margin-bottom:12px; }
+    .tabs { display:flex; gap:8px; margin:10px 0 12px; flex-wrap:wrap; }
+    button, select { font:inherit; }
+    button { border:0; border-radius:999px; padding:10px 14px; background:#fff; border:1px solid var(--line); color:var(--ink); font-weight:700; cursor:pointer; }
+    button.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+    button.yellow { background:var(--accent2); border-color:#f5d46c; }
+    button.active { background:#2f3548; color:#fff; border-color:#2f3548; }
+    button:active { transform:translateY(1px); }
+    .script { font-size:22px; line-height:1.65; white-space:pre-wrap; background:#fff; border:1px solid #f1d6e3; border-radius:18px; padding:16px; min-height:300px; }
+    .script.jp { font-size:19px; line-height:1.8; }
+    .controls { display:flex; flex-wrap:wrap; gap:8px; padding:12px; border-top:1px solid #f1d6e3; background:#fffafc; }
+    .nav { display:flex; gap:8px; align-items:center; justify-content:space-between; margin-top:12px; }
+    .nav button { flex:1; }
+    .small { font-size:13px; color:var(--muted); line-height:1.6; }
+    .select-row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:10px; }
+    select { border:1px solid var(--line); border-radius:999px; padding:9px 12px; max-width:100%; background:white; }
+    .progress-wrap { height:8px; background:#f5e4ed; border-radius:999px; overflow:hidden; flex-basis:100%; }
+    .progress { height:100%; width:0%; background:var(--accent); transition:.2s; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="top">
+      <h1>WAIE 2026 Practice App</h1>
+      <div class="pill" id="counter">Slide 1 / 21</div>
+      <div class="progress-wrap"><div class="progress" id="progress"></div></div>
+    </div>
+  </header>
+  <main>
+    <section class="card slidebox">
+      <img id="slideImage" class="slide-img" src="" alt="slide image">
+      <div class="nav">
+        <button id="prevBtn">← Previous</button>
+        <button id="nextBtn" class="primary">Next →</button>
+      </div>
+      <p class="small">キーボードの ← → でも移動できます。最後に見たスライドは自動保存されます。</p>
+    </section>
+    <section class="card">
+      <div class="scriptbox">
+        <h2 id="slideTitle" class="slide-title"></h2>
+        <div id="meta" class="meta"></div>
+        <div class="tabs">
+          <button id="enTab" class="active">English</button>
+          <button id="jpTab">日本語</button>
+          <button id="bothTab">Both</button>
+        </div>
+        <div id="script" class="script"></div>
+        <div class="select-row">
+          <label class="small" for="voiceSelect">Voice</label>
+          <select id="voiceSelect"></select>
+          <label class="small" for="rateSelect">Speed</label>
+          <select id="rateSelect">
+            <option value="0.78">Very slow</option>
+            <option value="0.86" selected>Practice</option>
+            <option value="0.95">Natural</option>
+            <option value="1.05">Fast</option>
+          </select>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="yellow" id="playBtn">▶ Read English</button>
+        <button id="stopBtn">■ Stop</button>
+        <button id="minusBtn">A−</button>
+        <button id="plusBtn">A＋</button>
+        <button id="resetBtn">Reset</button>
+      </div>
+    </section>
+  </main>
+  <script>
+    const slides = [
+  {
+    "num": 1,
+    "title": "WAIE 2026",
+    "image": "slides/slide01.jpg",
+    "en": "\"Thank you very much. My name is [○○]. I'm a doctoral student at JAIST — the Japan Advanced Institute of Science and Technology — and I also teach art at a public lower-secondary school in Japan. I'd also like to thank my co-author and supervisor, Professor [○○].\"\n\"Today I'd like to talk about how students make decisions when they create art with generative AI — how they judge, select, and revise. In this study, we focus not only on the images students finally chose, but also on the ones they did not choose. The non-selected images, and the brief reasons behind them, may reveal how students' thinking changed during the making process.\"",
+    "jp": "]\nどうもありがとうございます。私の名前は[○○]です。私はJAIST(日本科学技術研究院)の博士課程の学生であり、日本の公立の中学校で美術も教えています。また、共著者であり指導教官である[○○]教授にも感謝いたします。」 「今日は、生成AIを使ってアートを創作する際、学生がどのように判断し、選定し、修正するかについて話したいと思います。本研究では、学生が最終的に選んだ画像だけでなく、選ばなかった写真にも注目します。選ばれていない画像とその背景にある簡単な理由は、制作過程で学生の思考がどのように変化したかを明らかにするかもしれません。"
+  },
+  {
+    "num": 2,
+    "title": "Generative AI Enters the Art Classroom",
+    "image": "slides/slide02.jpg",
+    "en": "Let me start with the background.\nGenerative AI has changed the tempo of the art classroom.\nBefore AI, making variations took time. With AI, many polished images can be generated quickly.\nThis new tempo is exciting. But it also creates a problem for assessment: when we look only at the final product, much of the decision-making during creation stays invisible.\nThat is the motivation for this study.",
+    "jp": "]\nまず背景から始めましょう。\n生成AIは美術教室のテンポを変えました。\nAIが登場する前は、バリエーションを作るのに時間がかかりました。AIを使えば、多くの洗練された画像を素早く生成できます。\nこの新しいテンポはワクワクします。しかし、それは評価に問題をもたらします。最終製品だけを見ると、作成中の意思決定の多くが見えないままになるのです。\nこれがこの研究の動機です。"
+  },
+  {
+    "num": 3,
+    "title": "Previous Research: CAPGAP",
+    "image": "slides/slide03.jpg",
+    "en": "This slide briefly introduces CAPGAP, the interpretive framework behind this study.\nIn our previous work, we found that when students use generative AI in art-making, gaps often emerge between students’ intentions and AI-generated outputs.\nCAPGAP was used to describe these mismatches in three ways: cognitive, affective, and participatory gaps.\nA cognitive gap is about meaning or form.\nAn affective gap is about feeling or mood.\nA participatory gap is about the influence of tools, teachers, or peers.\nIn this presentation, CAPGAP is not introduced as a new theory.\nRather, it is used as a lens to explain why students move from reviewing an output to trying again.\nIn other words, this study builds on the previous finding of “gaps” and examines how these gaps appear in students’ actual revision processes.",
+    "jp": "]\nこのスライドでは、本研究の解釈枠組みであるCAPGAPについて簡単に説明します。\nこれまでの研究では、生徒が生成AIを用いて美術制作を行うとき、生徒の意図とAIが生成した画像との間にズレが生じることがわかりました。\nCAPGAPは、そのズレを、認知的・感情的・参加型の3つの観点から捉える枠組みです。\n認知的ギャップは、意味や形に関するズレです。\n感情的ギャップは、雰囲気や感じ方に関するズレです。\n参加型ギャップは、ツールや教師、友人との関わりによって生じるズレです。\n本発表では、CAPGAPを新しい理論として提示するのではありません。\nむしろ、生徒が生成結果を見直し、もう一度試す理由を説明するためのレンズとして用います。\nつまり本研究は、これまでに見えてきた「ズレ」に注目し、そのズレが実際の修正過程の中でどのように現れるのかを検討するものです。"
+  },
+  {
+    "num": 4,
+    "title": "Research Aim & Questions",
+    "image": "slides/slide04.jpg",
+    "en": "This slide shows the aim of this study and the three research questions.\nThe aim is to show how naturally recorded process traces can make students’ evaluative decisions visible in generative-AI-supported art making.\nTo examine this, the study takes two analytical steps.\nFirst, students’ records are organized as recurring cycles in the making process.\nSecond, the shifts in these cycles are interpreted through CAPGAP.\nRQ1 asks whether students’ records can be organized as recurring cycles.\nRQ2 asks how non-selected images and short reasons show emerging evaluative criteria.\nRQ3 asks how CAPGAP helps explain shifts from Review to Iterate.\nThe contribution of this study is not to propose a new theory.\nRather, it is to show an operational way to connect process segmentation with CAPGAP interpretation.",
+    "jp": "]\nこのスライドでは、本研究の目的と三つのリサーチクエスチョンを示しています。\n目的は、生成AIを用いた美術制作において、自然に残る制作過程の記録が、生徒の評価的判断をどのように見えるようにするのかを示すことです。\nそのために、本研究では二つの分析段階をとります。\n第一に、生徒の記録を、制作過程に現れる反復的なサイクルとして整理します。\n第二に、そのサイクルの中で起きる変化を、CAPGAPを通して解釈します。\nRQ1では、生徒の記録を反復的なサイクルとして整理できるかを問います。\nRQ2では、未採用画像と短い理由が、評価基準の立ち上がりをどのように示すかを問います。\nRQ3では、CAPGAPがReviewからIterateへの変化をどのように説明するかを問います。\n本研究の貢献は、新しい理論の提示ではありません。\nむしろ、制作過程を区切ることと、ズレを解釈することをつなぐ、操作的な方法を示すことにあります。"
+  },
+  {
+    "num": 5,
+    "title": "Classroom process behind CSRI",
+    "image": "slides/slide05.jpg",
+    "en": "Before explaining the analytical structure, I would like to show a short example of how a student actually interacted with generative AI during the art-making process.\nWatch what the student does along the way — the choices, the comments, the revisions. This example shows that the student did not simply accept the AI output.\nInstead, the student compared several outputs, selected one, reviewed it, and then tried again.",
+    "jp": "]\n分析の構造を説明する前に、まず、生徒が実際にどのように生成AIと関わっていたのか、短い例をご覧ください。\nここでは、最終的な画像だけでなく、途中で生徒がどのように選び、コメントし、修正しているのかに注目してください。\nこの例から、生徒はAIの出力をそのまま受け入れているのではないことがわかります。\nいくつかの画像を比較し、選択し、見直し、そしてもう一度試しています。"
+  },
+  {
+    "num": 6,
+    "title": "This Study: Operationalizing the Framework",
+    "image": "slides/slide06.jpg",
+    "en": "As you have just seen, the student’s activity can be understood as a repeated cycle.\nIn this study, we organize this process as a CSRI cycle: Compare, Select, Review, and Iterate.\nFirst, the student compares different AI-generated outputs.\nThen, the student selects one image.\nNext, the student reviews whether it fits their intention.\nFinally, the student iterates by revising the prompt or trying again.\nThis cycle helps us see the student’s evaluative judgment not only in the final product, but also in the process of making decisions.",
+    "jp": "]\n今ご覧いただいたように、生徒の活動は、反復的なサイクルとして捉えることができます。\n本研究では、この過程をCSRIサイクル、つまり Compare、Select、Review、Iterate として整理します。\nまず、生徒は複数のAI生成画像を比較します。\n次に、その中から一つを選択します。\nその後、自分の意図に合っているかを見直します。\n最後に、プロンプトを修正したり、もう一度生成したりします。\nこのサイクルによって、最終作品だけでは見えにくい生徒の評価的判断を、制作途中の意思決定の中から捉えることができます。"
+  },
+  {
+    "num": 7,
+    "title": "Two-stage analysis",
+    "image": "slides/slide07.jpg",
+    "en": "The analysis has two stages.\nIn Stage 1, CSRI is used to segment what happened in the students’ process traces: compare, select, review, and iterate.\nThis stage answers the structural question: what sequence of decisions can be observed?\nIn Stage 2, we look more closely at the review words.\nUsing a SCAT-informed stepwise approach, we move from short comments to more abstract concepts, and then CAPGAP helps interpret why the student revised the work.\nThis separation between segmentation and interpretation is the core of the study.",
+    "jp": "]\n分析は二段階で行いました。\n第一段階では、CSRIを用いて、生徒のプロセス痕跡の中で何が起きたのかを、Compare、Select、Review、Iterateとして整理します。\nこの段階では、どのような判断の流れが観察できるのかという構造的な問いに答えます。\n第二段階では、レビューの言葉をより詳しく見ます。\nSCATを参考に、短いコメントからより抽象的な概念へ段階的に進み、その後CAPGAPによって、なぜ修正につながったのかを解釈します。\nこのセグメンテーションと解釈の分離が、本研究の中心です。\n。"
+  },
+  {
+    "num": 8,
+    "title": "Results: Review–Iterate Patterns",
+    "image": "slides/slide08.jpg",
+    "en": "Now we come to the first result — the Review–Iterate pattern. Of the 71 students, 55 revised their work, but only 21 wrote a review note. So the largest group revised without writing anything down. This does not mean they were not thinking. Rather, their evaluative decisions appear in what they did — changing the prompt, regenerating, and selecting. So a review note is one kind of evidence — but not the only one.",
+    "jp": "]\nさて、最初の結果、レビュー–反復パターンに移ります。71人の学生のうち55人が作品を改訂しましたが、レビューノートを書いたのはわずか21人でした。そのため、最大のグループは何も書き留めずに修正しました。だからといって、彼らが考えていなかったわけではありません。むしろ、彼らの評価的な判断は、プロンプトの変更、再生、選択の行動に現れます。したがって、レビューノートは一つの証拠ですが、それだけではありません."
+  },
+  {
+    "num": 9,
+    "title": "Results: Review–Iterate Patterns",
+    "image": "slides/slide09.jpg",
+    "en": "Among the 71 students, 55 iterated by revising prompts or shifting direction, but only 21 wrote review notes.\nThis means that written review notes are useful, but they do not capture all revision processes.\nImportantly, 37 students iterated without leaving written review notes.\nFor this reason, we analyzed not only written comments, but also process traces, such as generated images, selected and non-selected outputs, and prompt revisions.",
+    "jp": "71人の学生のうち、55人はプロンプトの修正や方向転換で反復を行いましたが、レビューノートを書いたのはわずか21人でした。\nつまり、書面によるレビューノートは有用ですが、すべての修正プロセスを網羅しているわけではありません。\n重要なのは、37人の学生が書面によるレビューノートを残さずに反復作業を行ったことです。\nこのため、私たちは書き込みコメントだけでなく、生成画像、選択済み・非選択済み出力、プロンプトの修正などの痕跡も分析しました。"
+  },
+  {
+    "num": 10,
+    "title": "Case 1: Criteria became visible through comparison",
+    "image": "slides/slide10.jpg",
+    "en": "Here is the first case. The student generated images based on the idea of a beautiful instrument town.\nOne non-selected image was described as heavy, too dark, and a bit cluttered.\nThis short comment is important because it shows the student’s emerging criteria.\nThe student seemed to value brightness, clarity, and a closer fit with the intended style.\nThe final selected direction was brighter and closer to the student’s intention.",
+    "jp": "]\n一つ目の事例です。生徒は『美しい楽器の街』というイメージをもとに画像を生成しました。未採用画像について、『重い』『暗すぎる』『少しごちゃごちゃしている』というような理由が書かれました。この短いコメントは、生徒の評価基準を示す手がかりになります。生徒は、明るさ、わかりやすさ、自分の意図した雰囲気に近いことを重視していたと考えられます。最終的に、より明るく、意図に近い方向へ移っていきました。"
+  },
+  {
+    "num": 11,
+    "title": "Case 2: Participation shaped revision",
+    "image": "slides/slide11.jpg",
+    "en": "The second case shows participatory influence.\nThe student felt that the image had many elements and that the focus was unclear.\nThe later direction was shaped not only by the student’s own judgment, but also by interaction with AI outputs and suggestions from others.\nThis is why we interpret the case as participatory-centered.\nThe decision was made through the relationship among the learner, the tool, and the classroom context.",
+    "jp": "]\n二つ目の事例では、対話型の影響が見えます。生徒は、画像の要素が多く、焦点がはっきりしないと感じていました。その後の方向性は、生徒自身の判断だけでなく、AIの出力や周囲からの助言との関わりによって形づくられました。そのため、この事例は対話型のズレを中心に解釈できます。判断は、生徒、ツール、教室での関わりの中で生まれていたと言えます。"
+  },
+  {
+    "num": 12,
+    "title": "Finding & Conclusion",
+    "image": "slides/slide12.jpg",
+    "en": "To conclude, CSRI helped us organize student-level process traces. Non-selected images and short reasons helped make students’ evaluative criteria visible. CAPGAP helped explain why mismatches led to revision. The main contribution of this study is not to judge whether AI art is good or bad. It is to show how process traces can make students’ decision-making more visible. Non-selected images are not failures; they are learning traces.\nThank you very much for your attention. I'm happy to take any questions.",
+    "jp": "]\n結論として、CSRIは学生レベルのプロセストレースの整理に役立ちました。選択されていない画像や短い理由は、学生の評価基準を可視化するのに役立ちました。CAPGAPは、ミスマッチが改訂につながる理由を説明するのに役立ちました。この研究の主な貢献は、AIアートが良いか悪いかを判断することではありません。プロセスのトレースが学生の意思決定をより可視化できることを示すことです。選択されていない画像は失敗ではありません。それらは学習の痕跡です。"
+  },
+  {
+    "num": 13,
+    "title": "Backup Slides for Q&A",
+    "image": "slides/slide13.jpg",
+    "en": "The following slides are backup slides for questions. They are not part of the main presentation flow, but they prepare answers to likely questions about CSRI, CAPGAP, SCAT, process traces, and the strength of our claims.",
+    "jp": "]\nここからは質疑応答用の補助スライドです。本編の流れには入れませんが、CSRI、CAPGAP、SCAT、プロセス痕跡、主張の強さについて聞かれた場合に答えられるようにしています。"
+  },
+  {
+    "num": 14,
+    "title": "Q1. What is the CSRI cycle?",
+    "image": "slides/slide14.jpg",
+    "en": "If asked what CSRI is, we answer that CSRI is an analytic unit. It organizes the repeated process in which students compare generated images, select a direction, review whether the output fits their intention, and iterate by revising the prompt or direction. We should emphasize that it is not a teaching sequence imposed on students.",
+    "jp": "]\nCSRIとは何かと聞かれた場合、CSRIは分析単位だと答えます。生徒が生成画像を比較し、方向性を選び、意図に合うかを見直し、プロンプトや方向性を修正する反復的な過程を整理するためのものです。生徒に押しつけた授業手順ではないことを強調します。"
+  },
+  {
+    "num": 15,
+    "title": "Q2. How are CSRI and CAPGAP different?",
+    "image": "slides/slide15.jpg",
+    "en": "If asked how CSRI and CAPGAP differ, we answer that CSRI organizes what happened, while CAPGAP interprets why it happened. CSRI is structural. CAPGAP is interpretive. SCAT supports the step between students’ short comments and the CAPGAP interpretation.",
+    "jp": "]\nCSRIとCAPGAPの違いを聞かれた場合、CSRIは何が起きたかを整理し、CAPGAPはなぜそれが起きたのかを解釈すると答えます。CSRIは構造、CAPGAPは解釈です。SCATは、生徒の短いコメントとCAPGAPによる解釈の間をつなぐ役割を持ちます。"
+  },
+  {
+    "num": 16,
+    "title": "Q3. Why focus on non-selected images?",
+    "image": "slides/slide16.jpg",
+    "en": "If asked why we focus on non-selected images, we answer that final works hide alternatives. Non-selected images show what students decided not to use. When paired with short reasons, they reveal criteria such as brightness, clarity, focus, cuteness, or heaviness. These criteria are often invisible in final products alone.",
+    "jp": "]\nなぜ未採用画像に注目するのかと聞かれた場合、最終作品だけでは途中の選択肢が隠れてしまうと答えます。未採用画像は、生徒が何を使わないと判断したかを示します。短い理由と結びつくことで、明るさ、わかりやすさ、焦点、かわいさ、重さといった評価基準が見えるようになります。"
+  },
+  {
+    "num": 17,
+    "title": "Q4. What if students did not write review notes?",
+    "image": "slides/slide17.jpg",
+    "en": "If asked about students who did not write review notes, we should answer carefully. We do not assume that no note means no thinking. Prompt changes, regeneration, and selected or non-selected outputs can still be process traces. However, unwritten review is less observable, so we treat it cautiously and state this as a limitation.",
+    "jp": "]\nレビューを書いていない生徒について聞かれた場合は、慎重に答えます。書いていないから考えていないとは考えません。プロンプトの変更、再生成、選択や非選択の記録もプロセス痕跡になります。ただし、書かれていないレビューは観察しにくいため、限界として慎重に扱います。"
+  },
+  {
+    "num": 18,
+    "title": "Q5. Is this evidence of learning, or only activity logs?",
+    "image": "slides/slide18.jpg",
+    "en": "If asked whether this is evidence of learning or only activity logs, we answer that a log becomes educational evidence when it shows a visible change in judgment or criteria. We are not counting clicks or prompts as learning by themselves. We focus on how the trace shows a change from review to revision.",
+    "jp": "]\nこれは学びの証拠なのか、単なるログなのかと聞かれた場合、判断や評価基準の変化が見えるとき、そのログは教育的な手がかりになると答えます。クリック数やプロンプト数そのものを学びとして扱っているわけではありません。Reviewからrevisionへの変化が見えるかを重視しています。"
+  },
+  {
+    "num": 19,
+    "title": "Q6. Why use SCAT in the analysis?",
+    "image": "slides/slide19.jpg",
+    "en": "If asked why SCAT is used, we explain that students’ comments were often very short. SCAT helps us move step by step from raw words to concepts, instead of jumping directly to our own interpretation. This makes the analysis more transparent.",
+    "jp": "]\nなぜSCATを使うのかと聞かれた場合、生徒のコメントがとても短かったからだと説明します。SCATは、生の言葉から概念へ段階的に進むための方法です。研究者の解釈へ一気に飛ばないため、分析の透明性が高まります。"
+  },
+  {
+    "num": 20,
+    "title": "Q7. What are the limitations of this study?",
+    "image": "slides/slide20.jpg",
+    "en": "If asked about limitations, we answer that this is an exploratory classroom-based study. The data come from one classroom context and one tool environment. Also, short comments cannot fully represent students’ inner thinking. Some Compare and Select events were not preserved at event level, so our claims are cautious.",
+    "jp": "]\n研究の限界を聞かれた場合、本研究は探索的な授業研究であると答えます。データは一つの授業文脈と一つのツール環境に基づいています。また、短いコメントだけで生徒の内面を完全に表すことはできません。CompareやSelectのすべてをイベント単位で記録できたわけではないため、主張は慎重に示します。"
+  },
+  {
+    "num": 21,
+    "title": "Q8. What is the educational contribution?",
+    "image": "slides/slide21.jpg",
+    "en": "If asked about the educational contribution, we answer that this study helps teachers see students’ judgment processes, not only final products. It suggests a way to assess AI-supported making more transparently by looking at choices, rejections, reasons, and revisions.",
+    "jp": "]\n教育的な貢献を聞かれた場合、本研究は教師が最終作品だけでなく、生徒の判断過程を見るための手がかりになると答えます。選択、非選択、理由、修正を見ることで、AIを用いた制作をより透明に評価する方法を示しています。"
+  }
+];
+    let current = Number(localStorage.getItem('waie2026-current-slide-notes') || 0);
+    if (!Number.isFinite(current) || current < 0 || current >= slides.length) current = 0;
+    let mode = localStorage.getItem('waie2026-mode-notes') || 'en';
+    let fontSize = Number(localStorage.getItem('waie2026-font-notes') || 22);
+    const els = {
+      img: document.getElementById('slideImage'), title: document.getElementById('slideTitle'), meta: document.getElementById('meta'), counter: document.getElementById('counter'), progress: document.getElementById('progress'), script: document.getElementById('script'), prev: document.getElementById('prevBtn'), next: document.getElementById('nextBtn'), enTab: document.getElementById('enTab'), jpTab: document.getElementById('jpTab'), bothTab: document.getElementById('bothTab'), play: document.getElementById('playBtn'), stop: document.getElementById('stopBtn'), plus: document.getElementById('plusBtn'), minus: document.getElementById('minusBtn'), reset: document.getElementById('resetBtn'), voiceSelect: document.getElementById('voiceSelect'), rateSelect: document.getElementById('rateSelect')
+    };
+    function textFor(slide) {
+      if (mode === 'jp') return slide.jp || '日本語メモはありません。';
+      if (mode === 'both') return `[EN]\n${slide.en || ''}\n\n[JP]\n${slide.jp || ''}`;
+      return slide.en || 'English script is not available for this slide.';
+    }
+    function render() {
+      const s = slides[current];
+      els.img.src = s.image;
+      els.title.textContent = s.title || `Slide ${current + 1}`;
+      els.meta.textContent = `Slide ${current + 1} of ${slides.length} · speaker notes version`;
+      els.counter.textContent = `Slide ${current + 1} / ${slides.length}`;
+      els.progress.style.width = `${((current + 1) / slides.length) * 100}%`;
+      els.script.textContent = textFor(s);
+      els.script.style.fontSize = fontSize + 'px';
+      els.script.classList.toggle('jp', mode !== 'en');
+      for (const [m, el] of [['en', els.enTab], ['jp', els.jpTab], ['both', els.bothTab]]) el.classList.toggle('active', mode === m);
+      localStorage.setItem('waie2026-current-slide-notes', String(current));
+      localStorage.setItem('waie2026-mode-notes', mode);
+      localStorage.setItem('waie2026-font-notes', String(fontSize));
+    }
+    function go(delta) { window.speechSynthesis.cancel(); current = Math.max(0, Math.min(slides.length - 1, current + delta)); render(); }
+    function setMode(m) { mode = m; render(); }
+    els.prev.onclick = () => go(-1); els.next.onclick = () => go(1);
+    els.enTab.onclick = () => setMode('en'); els.jpTab.onclick = () => setMode('jp'); els.bothTab.onclick = () => setMode('both');
+    els.plus.onclick = () => { fontSize = Math.min(36, fontSize + 2); render(); };
+    els.minus.onclick = () => { fontSize = Math.max(14, fontSize - 2); render(); };
+    els.reset.onclick = () => { current = 0; mode = 'en'; fontSize = 22; render(); };
+    window.addEventListener('keydown', e => { if (e.key === 'ArrowRight') go(1); if (e.key === 'ArrowLeft') go(-1); });
+    function populateVoices() {
+      const voices = speechSynthesis.getVoices();
+      const preferred = voices.filter(v => /^en(-|_)/i.test(v.lang));
+      const list = preferred.length ? preferred : voices;
+      const saved = localStorage.getItem('waie2026-voice-notes');
+      els.voiceSelect.innerHTML = '';
+      list.forEach(v => { const opt = document.createElement('option'); opt.value = v.name; opt.textContent = `${v.name} (${v.lang})`; if (saved && saved === v.name) opt.selected = true; els.voiceSelect.appendChild(opt); });
+    }
+    if ('speechSynthesis' in window) { populateVoices(); speechSynthesis.onvoiceschanged = populateVoices; }
+    els.voiceSelect.onchange = () => localStorage.setItem('waie2026-voice-notes', els.voiceSelect.value);
+    els.play.onclick = () => {
+      if (!('speechSynthesis' in window)) { alert('このブラウザでは音声読み上げに対応していません。'); return; }
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(slides[current].en || '');
+      utter.lang = 'en-US'; utter.rate = Number(els.rateSelect.value || 0.86);
+      const voices = speechSynthesis.getVoices(); const selected = voices.find(v => v.name === els.voiceSelect.value);
+      if (selected) utter.voice = selected;
+      window.speechSynthesis.speak(utter);
+    };
+    els.stop.onclick = () => window.speechSynthesis.cancel();
+    render();
+  </script>
+</body>
+</html>
