@@ -1,0 +1,1 @@
+GitHub Pages用です。ZIPを解凍し、index.htmlをリポジトリのルートに置いてください。画像はHTML内に埋め込み済みです。
